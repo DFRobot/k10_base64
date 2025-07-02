@@ -1,3 +1,14 @@
+/*!
+ * @file k10_base64.cpp
+ * @brief 这是一个转换数据为base64的库
+ * @copyright   Copyright (c) 2025 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @license     The MIT License (MIT)
+ * @author [TangJie](jie.tang@dfrobot.com)
+ * @version  V1.0
+ * @date  2025-04-01
+ * @url https://github.com/DFRobot/k10_base64
+ */
+
 #include "k10_base64.h"
 #include "base64.h"
 
@@ -8,14 +19,23 @@ K10_base64::K10_base64(void){}
 
 String K10_base64::K10tobase64(void)
 {
+    size_t _jpg_buf_len = 0;
+    uint8_t *_jpg_buf = NULL;
     // 从队列接收帧数据
     if (xQueueReceive(xQueueCamer, &base64_frame, portMAX_DELAY) != pdTRUE) {
         DBG("continue");
         return "NULL";  // 如果接收失败，继续等待
     }
-    String base64Image = base64::encode(base64_frame->buf, base64_frame->len);
-    // 释放帧数据
+    // 转换帧为 JPEG
+    if (!frame2jpg(base64_frame, 80, &_jpg_buf, &_jpg_buf_len)) {
+        DBG("JPEG compression failed");
+        esp_camera_fb_return(base64_frame);
+        return "NULL";
+    }
     esp_camera_fb_return(base64_frame);
+    String base64Image = base64::encode(_jpg_buf, _jpg_buf_len);
+    // 释放帧数据
+    free(_jpg_buf);
     return base64Image;
 }
 

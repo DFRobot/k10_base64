@@ -1,3 +1,14 @@
+/*!
+ * @file k10_base64.h
+ * @brief 这是一个转换数据为base64的库
+ * @copyright   Copyright (c) 2025 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @license     The MIT License (MIT)
+ * @author [TangJie](jie.tang@dfrobot.com)
+ * @version  V1.0
+ * @date  2025-04-01
+ * @url https://github.com/DFRobot/k10_base64
+ */
+
 #ifndef _K10_BASE64_H_
 #define _K10_BASE64_H_
 #include "Arduino.h"
